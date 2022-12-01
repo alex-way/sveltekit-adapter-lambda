@@ -25,13 +25,14 @@
     "files"
   ],
   "scripts": {
-    "build": "esbuild src/serverless.js --bundle --format=esm --platform=node --external:'index.*' --external:MANIFEST --external:SERVER --outfile=files/serverless.js && cp src/shims.js files/shims.js && cp src/router.js files/router.js",
+    "build": "rimraf files && esbuild src/serverless.js --bundle --format=esm --platform=node --external:'index.*' --external:MANIFEST --external:SERVER --outfile=files/serverless.js && cp src/shims.js files/shims.js",
     "prepare": "pnpm build"
   },
   "dependencies": {
     "@silvermine/serverless-plugin-cloudfront-lambda-edge": "^2.2.3",
     "esbuild": "0.15.16",
     "fs-extra": "11.0.0",
+    "rimraf": "^3.0.2",
     "serverless": "^3.0.0",
     "serverless-s3-deploy": "^0.10.1",
     "set-cookie-parser": "^2.5.0"
