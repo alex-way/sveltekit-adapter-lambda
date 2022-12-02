@@ -25,7 +25,7 @@
     "files"
   ],
   "scripts": {
-    "build": "rimraf files && esbuild src/serverless.js --bundle --format=esm --platform=node --external:'index.*' --external:MANIFEST --external:SERVER --outfile=files/serverless.js && cp src/shims.js files/shims.js",
+    "build": "rimraf files && esbuild src\\serverless.js --bundle --format=esm --platform=node --external:'index.*' --external:MANIFEST --external:SERVER --outfile=files\\serverless.js && copy src\\shims.js files\\",
     "prepare": "pnpm build"
   },
   "dependencies": {
