@@ -26,17 +26,16 @@ custom:
     targets:
       - bucket:
           Ref: StaticAssets
+        empty: true
         files:
           - source: ./build/assets/
             globs:
               - "**"
-            empty: true
             headers:
               CacheControl: max-age=31104000
           - source: ./build/prerendered/
             globs:
               - "**"
-            empty: true
             headers:
               CacheControl: max-age=60
 
