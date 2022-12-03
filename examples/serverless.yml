@@ -3,7 +3,6 @@ service: "sveltekit-app"
 frameworkVersion: "3"
 
 plugins:
-  - "@silvermine/serverless-plugin-cloudfront-lambda-edge"
   - serverless-s3-deploy
 
 provider:
@@ -42,21 +41,11 @@ custom:
               CacheControl: max-age=60
 
 functions:
-  #SSR Function
-  svelte:
+  ssr:
     handler: build/server/serverless.handler
     memorySize: 256
     timeout: 15
     url: true
-
-  #Router Function
-  cfLambda:
-    handler: build/edge/router.handler
-    memorySize: 128
-    timeout: 1
-    lambdaAtEdge:
-      distribution: "WebsiteDistribution"
-      eventType: origin-request
 
 resources:
   Resources:
@@ -90,7 +79,7 @@ resources:
             - DomainName:
                 !Select [
                   2,
-                  !Split ["/", !GetAtt "SvelteLambdaFunctionUrl.FunctionUrl"],
+                  !Split ["/", !GetAtt "SsrLambdaFunctionUrl.FunctionUrl"],
                 ]
               Id: default
               CustomOriginConfig:
@@ -103,6 +92,19 @@ resources:
                 HTTPPort: 80
                 HTTPSPort: 443
                 OriginProtocolPolicy: "https-only"
+          CacheBehaviors:
+            - TargetOriginId: assets
+              ViewerProtocolPolicy: redirect-to-https
+              PathPattern: /_app/*
+              Compress: true
+              # CachingOptimised cache policy: https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/using-managed-cache-policies.html
+              CachePolicyId: 658327ea-f89d-4fab-a63d-7e88639e58f6
+            - TargetOriginId: assets
+              ViewerProtocolPolicy: redirect-to-https
+              PathPattern: /img/*
+              Compress: true
+              # CachingOptimised cache policy: https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/using-managed-cache-policies.html
+              CachePolicyId: 658327ea-f89d-4fab-a63d-7e88639e58f6
           Enabled: true
           Comment: "${self:service}_${self:provider.stage}"
           DefaultCacheBehavior:
