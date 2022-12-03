@@ -1,6 +1,6 @@
 {
   "name": "@alex-way/adapter-lambda",
-  "version": "0.2.0",
+  "version": "1.0.0",
   "license": "MIT",
   "description": "An adapter for [SvelteKit](https://kit.svelte.dev/) for AWS Lambda.  [Serverless](https://serverless.com/) deployment.",
   "type": "module",
