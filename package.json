@@ -31,7 +31,6 @@
   "dependencies": {
     "@silvermine/serverless-plugin-cloudfront-lambda-edge": "^2.2.3",
     "esbuild": "0.15.16",
-    "fs-extra": "11.0.0",
     "rimraf": "^3.0.2",
     "serverless": "^3.0.0",
     "serverless-s3-deploy": "^0.10.1",

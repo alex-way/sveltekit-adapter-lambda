@@ -1,4 +1,4 @@
-import { copyFileSync, unlinkSync, existsSync, mkdirSync, emptyDirSync } from "fs-extra";
+import { copyFileSync, unlinkSync, existsSync } from "fs";
 import { join } from "path/posix";
 import esbuild from "esbuild";
 
@@ -11,29 +11,29 @@ import esbuild from "esbuild";
 export default function ({ out = "build", assetsDir = "assets" }) {
   /** @type {import('@sveltejs/kit').Adapter} */
   const adapter = {
-    name: "adapter-serverless",
+    name: "adapter-lambda",
 
     async adapt(builder) {
-      emptyDirSync(out);
+      builder.rimraf(out);
 
       const static_directory = join(out, assetsDir);
       if (!existsSync(static_directory)) {
-        mkdirSync(static_directory, { recursive: true });
+        builder.mkdirp(static_directory, { recursive: true });
       }
 
       const prerendered_directory = join(out, "prerendered");
       if (!existsSync(prerendered_directory)) {
-        mkdirSync(prerendered_directory, { recursive: true });
+        builder.mkdirp(prerendered_directory, { recursive: true });
       }
 
       const server_directory = join(out, "server");
       if (!existsSync(server_directory)) {
-        mkdirSync(server_directory, { recursive: true });
+        builder.mkdirp(server_directory, { recursive: true });
       }
 
       const edge_directory = join(out, "edge");
       if (!existsSync(edge_directory)) {
-        mkdirSync(edge_directory, { recursive: true });
+        builder.mkdirp(edge_directory, { recursive: true });
       }
 
       builder.log.minor("Copying assets");
