@@ -14,6 +14,8 @@ export async function handler(event) {
   const encoding = isBase64Encoded ? "base64" : headers["content-encoding"] || "utf-8";
   const rawBody = typeof body === "string" ? Buffer.from(body, encoding) : body;
 
+  headers["origin"] = `https://${requestContext.domainName}`;
+
   if (cookies) {
     headers["cookie"] = cookies.join("; ");
   }

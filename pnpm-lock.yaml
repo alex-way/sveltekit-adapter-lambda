@@ -3,10 +3,16 @@ lockfileVersion: 5.4
 specifiers:
   esbuild: 0.15.16
   rimraf: ^3.0.2
+  set-cookie-parser: ^2.5.1
+  typescript: ^4.9.4
 
 dependencies:
   esbuild: 0.15.16
   rimraf: 3.0.2
+  set-cookie-parser: 2.5.1
+
+devDependencies:
+  typescript: 4.9.4
 
 packages:
 
@@ -302,6 +308,16 @@ packages:
     dependencies:
       glob: 7.2.3
     dev: false
+
+  /set-cookie-parser/2.5.1:
+    resolution: {integrity: sha512-1jeBGaKNGdEq4FgIrORu/N570dwoPYio8lSoYLWmX7sQ//0JY08Xh9o5pBcgmHQ/MbsYp/aZnOe1s1lIsbLprQ==}
+    dev: false
+
+  /typescript/4.9.4:
+    resolution: {integrity: sha512-Uz+dTXYzxXXbsFpM86Wh3dKCxrQqUcVMxwU54orwlJjOpO3ao8L7j5lH+dWfTwgCwIuM9GQ2kvVotzYJMXTBZg==}
+    engines: {node: '>=4.2.0'}
+    hasBin: true
+    dev: true
 
   /wrappy/1.0.2:
     resolution: {integrity: sha512-l4Sp/DRseor9wL6EvV2+TuQn63dMkPjZ/sp9XkghTEbV9KlPS1xUsZ3u7/IQO4wxtcFB4bgpQPRcR3QCvezPcQ==}

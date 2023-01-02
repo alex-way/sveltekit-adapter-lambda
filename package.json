@@ -1,6 +1,6 @@
 {
   "name": "@alex-way/adapter-lambda",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "license": "MIT",
   "description": "An adapter for [SvelteKit](https://kit.svelte.dev/) for AWS Lambda.  [Serverless](https://serverless.com/) deployment.",
   "type": "module",
@@ -30,6 +30,10 @@
   },
   "dependencies": {
     "esbuild": "0.15.16",
-    "rimraf": "^3.0.2"
+    "rimraf": "^3.0.2",
+    "set-cookie-parser": "^2.5.1"
+  },
+  "devDependencies": {
+    "typescript": "^4.9.4"
   }
 }
