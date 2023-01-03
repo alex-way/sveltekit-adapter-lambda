@@ -122,6 +122,8 @@ resources:
               - HEAD
               - OPTIONS
             ForwardedValues:
+              Headers:
+                - Origin
               Cookies:
                 Forward: all
               QueryString: True

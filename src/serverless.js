@@ -8,58 +8,57 @@ import { splitCookiesString } from "set-cookie-parser";
  * @returns {Promise<import('aws-lambda').APIGatewayProxyResult>}
  */
 export async function handler(event) {
-  const app = new Server(manifest);
+  const server = new Server(manifest);
   const { rawPath, headers, rawQueryString, body, requestContext, isBase64Encoded, cookies } = event;
 
-  const encoding = isBase64Encoded ? "base64" : headers["content-encoding"] || "utf-8";
+  /** @type {BufferEncoding | undefined} */
+  const requestEncoding = headers["content-encoding"];
+  const encoding = isBase64Encoded ? "base64" : requestEncoding || "utf-8";
   const rawBody = typeof body === "string" ? Buffer.from(body, encoding) : body;
 
-  headers["origin"] = `https://${requestContext.domainName}`;
+  // If origin header is missing, set it equal to the host header.
+  const origin = process.env.ORIGIN || headers["origin"] || `https://${headers["host"]}`;
+  if (!headers.origin) headers["origin"] = origin;
 
-  if (cookies) {
-    headers["cookie"] = cookies.join("; ");
-  }
+  let url = `${origin}${rawPath}${rawQueryString ? `?${rawQueryString}` : ""}`;
 
-  let rawURL = `https://${requestContext.domainName}${rawPath}${rawQueryString ? `?${rawQueryString}` : ""}`;
+  await server.init({ env: process.env });
 
-  await app.init({
-    env: process.env,
-  });
+  if (cookies) headers["cookie"] = cookies.join("; ");
 
-  //Render the app
-  const rendered = await app.respond(
-    new Request(rawURL, {
+  const response = await server.respond(
+    new Request(url, {
       method: requestContext.http.method,
       headers: new Headers(headers),
       body: rawBody,
     })
   );
 
-  //Parse the response into lambda proxy response
-  if (rendered) {
-    const resp = {
-      headers: {},
-      cookies: [],
-      body: await rendered.text(),
-      statusCode: rendered.status,
+  if (!response)
+    return {
+      statusCode: 404,
     };
 
-    for (let k of rendered.headers.keys()) {
-      let header = rendered.headers.get(k);
-
-      if (k == "set-cookie") {
-        resp.cookies = resp.cookies.concat(splitCookiesString(header));
-      } else {
-        //For multivalue headers, join them
-        if (header instanceof Array) {
-          header = header.join(",");
-        }
-        resp.headers[k] = header;
-      }
-    }
-    return resp;
-  }
-  return {
-    statusCode: 404,
+  const resp = {
+    /** @type {{[k: string]: string}} */ headers: {},
+    /** @type {string[]} */ cookies: [],
+    body: await response.text(),
+    statusCode: response.status,
   };
+
+  for (let k of response.headers.keys()) {
+    let header = response.headers.get(k);
+
+    if (k == "set-cookie") {
+      resp.cookies = resp.cookies.concat(splitCookiesString(header));
+    } else {
+      //For multivalue headers, join them
+      if (header instanceof Array) {
+        header = header.join(",");
+      }
+      resp.headers[k] = header;
+    }
+  }
+
+  return resp;
 }

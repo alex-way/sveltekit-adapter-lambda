@@ -5,7 +5,6 @@ import { writeFileSync } from "fs";
 
 /** @type {import('.').default} **/
 const plugin = function ({ out = "build", clientDir = "assets", precompress } = {}) {
-  /** @type {import('@sveltejs/kit').Adapter} */
   const adapter = {
     name: "adapter-lambda",
 
